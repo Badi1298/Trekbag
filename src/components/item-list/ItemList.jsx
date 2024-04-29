@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Item from './Item';
 import EmptyView from './EmptyView';
@@ -17,12 +17,16 @@ export default function ItemList({
 }) {
     const [selectedOption, setSelectedOption] = useState(options[0]);
 
-    const sortedItems = [...items].sort((a, b) => {
-        return {
-            packed: b.packed - a.packed,
-            unpacked: a.packed - b.packed,
-        }[selectedOption.value];
-    });
+    const sortedItems = useMemo(
+        () =>
+            [...items].sort((a, b) => {
+                return {
+                    packed: b.packed - a.packed,
+                    unpacked: a.packed - b.packed,
+                }[selectedOption.value];
+            }),
+        [items, selectedOption.value]
+    );
 
     return (
         <ul className="item-list">
